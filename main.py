@@ -15,7 +15,7 @@ def main():
         time.sleep(1)
 
 
-class MyDaemon(Daemon):
+class ExampleDaemon(Daemon):
     def __init__(self, pid):
         super(self.__class__, self).__init__(pid)
 
@@ -33,7 +33,7 @@ if __name__ == "__main__":
     dirname = os.path.dirname(pidpath)
     if not os.path.exists(dirname):
         os.makedirs(dirname)
-    daemon = MyDaemon(pidpath)
+    daemon = ExampleDaemon(pidpath)
     if 'start' == args.cmd:
         daemon.start()
     elif 'stop' == args.cmd:
