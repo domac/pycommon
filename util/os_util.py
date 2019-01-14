@@ -121,6 +121,3 @@ if ip_address.startswith('192.168'):
     DEBUG = True
 else:
     DEBUG = False
-
-if __name__ == '__main__':
-    print get_netstat_bind_ip()

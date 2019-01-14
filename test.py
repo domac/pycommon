@@ -1,12 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-import sys
-import os
-import argparse
-import time
-from common.daemon import Daemon
-from common.logger import Logger
 import commands
 
 
@@ -33,46 +26,11 @@ def execute_monitor():
         res = "%s\n%s\n%s" % (result_cmd_conn_num, result_cmd_conn_num_25432,
                               result_cmd_processes_num)
 
-        Logger.logger.info("\n%s" % res)
+        print res
 
     except Exception, e:
-        Logger.logger.error(e)
-
-
-def main():
-    while True:
-        execute_monitor()
-        time.sleep(60)
-
-
-class ExampleDaemon(Daemon):
-    def __init__(self, pid):
-        super(self.__class__, self).__init__(pid)
-
-    def run(self):
-        if not os.path.exists("/data/logs"):
-            os.makedirs("/data/logs")
-
-        main()
+        print e
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument('cmd', default="start", help='start, stop, restart')
-    parser.add_argument('-p', '--pidfile', default="./proc/pycommon.pid")
-
-    args = parser.parse_args()
-    pidpath = os.path.abspath(args.pidfile)
-    dirname = os.path.dirname(pidpath)
-    if not os.path.exists(dirname):
-        os.makedirs(dirname)
-    daemon = ExampleDaemon(pidpath)
-    if 'start' == args.cmd:
-        daemon.start()
-    elif 'stop' == args.cmd:
-        daemon.stop()
-    elif 'restart' == args.cmd:
-        daemon.restart()
-    else:
-        print "Unknown command"
-        sys.exit(2)
+    execute_monitor()
