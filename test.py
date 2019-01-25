@@ -32,5 +32,29 @@ def execute_monitor():
         print e
 
 
+flow_counter = {"8081": 0, "28080": 0, "28180": 0, "443": 0}
+
+
+def execute_port_flow():
+    result = {}
+    for port, old_counter in flow_counter.items():
+        cmd = "iptables -L -v -n -x | grep 'tcp dpt:%s' | awk '{print $2}' | head -n 1" % port
+        print cmd
+        code, output = commands.getstatusoutput(cmd)
+        if not output:
+            output = "0"
+        new_counter = int(str(output))
+        counter = new_counter - old_counter
+        flow_counter[port] = counter
+        result[port] = counter / 1024
+
+    output = "net port flow >>> "
+    for port, res in result.items():
+        sub = "[%s:%d]" % (port, res)
+        output += sub
+
+    print output
+
+
 if __name__ == "__main__":
-    execute_monitor()
+    execute_port_flow()

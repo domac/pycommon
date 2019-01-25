@@ -39,10 +39,35 @@ def execute_monitor():
         Logger.logger.error(e)
 
 
+flow_counter = {"8081": 0, "28080": 0, "28180": 0, "443": 0}
+
+
+def execute_port_flow(secs):
+    result = {}
+    for port, old_counter in flow_counter.items():
+        cmd = "iptables -L -v -n -x | grep 'tcp dpt:%s' | awk '{print $2}' | head -n 1" % port
+        code, output = commands.getstatusoutput(cmd)
+        if not output:
+            output = "0"
+        new_counter = int(str(output))
+        counter = new_counter - old_counter
+        flow_counter[port] = new_counter
+        if counter == new_counter:
+            continue
+        result[port] = 8 * counter / 1024 / secs
+
+    output = "net port flow : "
+    for port, res in result.items():
+        sub = "<%s:%dKb>" % (port, res)
+        output += sub
+
+    Logger.logger.info(output)
+
+
 def main():
     while True:
-        execute_monitor()
-        time.sleep(60)
+        execute_port_flow(10)
+        time.sleep(10)
 
 
 class ExampleDaemon(Daemon):
