@@ -58,7 +58,7 @@ def execute_port_flow(secs):
 
     output = "net port flow : "
     for port, res in result.items():
-        sub = "<%s:%dKb>" % (port, res)
+        sub = "<%s:%dKb>\t" % (port, res)
         output += sub
 
     Logger.logger.info(output)
