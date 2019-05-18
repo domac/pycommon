@@ -9,6 +9,8 @@ from common.daemon import Daemon
 from common.logger import Logger
 import commands
 
+#iptables -A INPUT -p tcp --dport 28080   |  移除统计：iptables -D INPUT -p tcp --dport 28080
+
 
 def execute_monitor():
     try:
